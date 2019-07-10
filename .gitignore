@@ -14,4 +14,4 @@ npm-debug.log
 jest.config.js
 vendor
 build
-.package-lock.json
+package-lock.json
