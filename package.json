@@ -1,0 +1,12 @@
+{
+  "name": "@infinitum/web-sdk",
+  "version": "0.0.1",
+  "description": "Infinitum Web SDK",
+  "main": "dist/infinitum-sdk.js",
+  "repository": {
+    "type": "git",
+    "url": "git://https://github.com/infinitum-dev/web-sdk.git"
+  },
+  "author": "FYI",
+  "license": "ISC"
+}

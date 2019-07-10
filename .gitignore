@@ -1,0 +1,16 @@
+.idea
+coverage
+.DS_Store
+node_modules
+example/env/index.js
+src
+npm-debug.log
+.babelrc
+.eslintrc.js
+.lintstagedrc
+.npmignore
+.prettierignore
+.prettierrc
+jest.config.js
+vendor
+build

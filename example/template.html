@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Infinitum SDK</title>
+
+  <script src="https://kit.fontawesome.com/57eecd0a57.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
+  <style>
+    .navbar {
+      background-color: #ddd;
+      min-height: 20px;
+    }
+
+    video {
+      width: 640px;
+      height: 480px;
+    }
+
+    .footer {
+      padding: 20px;
+      background-color: #ddd;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.is-active {
+      display: inherit;
+    }
+
+    .section {
+      margin-top: 20px;
+      padding: 0 1.5rem;
+      min-height: calc(100vh - 20px - 64px - 20px);
+    }
+
+    img {
+      width: unset;
+      height: unset;
+    }
+
+    #liveness-container {
+      height: 500px;
+      position: relative;
+    }
+
+    span.icon {
+      margin-top: 8px;
+    }
+
+    .field {
+      margin-right: 8px;
+    }
+  </style>
+  <script src="./env/index.js"></script>
+</head>
+
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="tabs">
+        <ul>
+          <li class="is-active"><a data-tab="main">Main</a></li>
+          <li><a data-tab="auth">Auth</a></li>
+          <li><a data-tab="analytics">Analytics</a></li>
+          <li><a data-tab="device">Device</a></li>
+          <li><a data-tab="user">User</a></li>
+          <li><a data-tab="camera">Camera</a></li>
+          <li><a data-tab="liveness">Liveness</a></li>
+        </ul>
+      </div>
+
+      <div id="main" class="tab-content is-active">
+        <div class="init">
+          <b>Init</b>
+          <div class="log"></div>
+        </div>
+
+        <div id="qr">
+          <div id="qr-url"></div>
+          <canvas id="qr-canvas"></canvas>
+        </div>
+      </div>
+
+      <div id="auth" class="tab-content">
+        <div class="photo">
+          <a onclick="biometric()">Biometric</a>
+          <div class="response"></div>
+          <div class="log"></div>
+        </div>
+      </div>
+
+      <div id="analytics" class="tab-content">
+        <div class="create">
+          <b>Create</b>
+          <br><br>
+          <form>
+            <div class="field is-horizontal">
+              <div class="field">
+                <input class="input create" type="text" placeholder="Key">
+              </div>
+              <div class="field">
+                <input class="input create" type="text" placeholder="Value">
+              </div>
+              <span class="icon is-small is-hidden">
+                <i class="fas fa-trash"></i>
+              </span>
+            </div>
+          </form>
+          <button class="button is-primary" onclick="analyticsCreate()">
+            Create
+          </button>
+          <div class="response"></div>
+          <div class="log"></div>
+        </div>
+        <div class="show">
+          <b>Showw (id)</b>
+          <form>
+              <div class="field">
+                <input style="width: 60px;" class="input show" type="number" min="1" value="1" placeholder="1">
+              </div>
+          </form>
+          <button style="margin-top:10px;"class="button is-primary" onclick="analyticsShow()">
+            Show
+          </button>
+          <div class="response"></div>
+          <div class="log"></div>
+        </div>
+        <div class="all">
+          <br><br/>
+          <br><br/>
+          <b>Index</b>
+          <br><br/>
+           <button class="button is-primary" onclick="analyticsAll()">
+            Index
+          </button>
+          <div class="log">
+          </div>
+        </div>
+        <div class="nextpage">
+          <br><br/>
+          <br><br/>
+          <b>Next Page</b>
+          <br><br/>
+          <b id="pageurl"></b>
+          <br><br/>
+         <!--<button class="button is-primary" onclick="analyticsAll()">
+            Index
+          </button>-->
+          <div class="log">
+          </div>
+        </div>
+      </div>
+
+
+      <div id="device" class="tab-content">
+        <div class="create">
+          <b>Create</b>
+          <br><br>
+          <form>
+            <div class="field is-horizontal">
+              <div class="field">
+                <input class="input create" type="text" placeholder="Key">
+              </div>
+              <div class="field">
+                <input class="input create" type="text" placeholder="Value">
+              </div>
+              <span class="icon is-small is-hidden">
+                <i class="fas fa-trash"></i>
+              </span>
+            </div>
+          </form>
+          <button class="button is-primary" onclick="deviceCreate()">
+            Create
+          </button>
+          <div class="response"></div>
+          <div class="log"></div>
+        </div>
+      </div>
+
+      <div id="user" class="tab-content">
+        <div class="create">
+          <b>Create</b>
+          <br><br>
+          <form>
+            <div class="field is-horizontal">
+              <div class="field">
+                <input class="input create" type="text" placeholder="Key">
+              </div>
+              <div class="field">
+                <input class="input create" type="text" placeholder="Value">
+              </div>
+              <span class="icon is-small is-hidden">
+                <i class="fas fa-trash"></i>
+              </span>
+            </div>
+          </form>
+          <button class="button is-primary" onclick="userCreate()">
+            Create
+          </button>
+          <div class="response"></div>
+          <div class="log"></div>
+        </div>
+      </div>
+
+      <div id="camera" class="tab-content">
+        <div class="photo">
+          <a onclick="takePhoto()">Take Photo</a>
+          <div class="response"></div>
+          <div class="log"></div>
+        </div>
+        <div class="document">
+          <a onclick="takeDocument()">Take Document</a>
+          <div id="document-container"></div>
+          <div class="response"></div>
+          <div class="log"></div>
+        </div>
+      </div>
+
+      <div id="liveness" class="tab-content">
+        <div class="liveness">
+          <a onclick="liveness()">Start</a>
+          <div id="liveness-container"></div>
+          <div class="response"></div>
+          <div class="log"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <strong>Infinitum SDK</strong> by <a href="https://www.fyi.pt/" target="_blank">FYI</a>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    window.onload = load = async () => {
+      // TEMPLATE
+      const tabs = document.querySelectorAll(".tabs li");
+      for (let i = 0; i < tabs.length; i++) {
+        tabs[i].addEventListener("click", (e) => {
+          document.querySelector(".tabs li.is-active").classList.remove("is-active");
+          document.querySelector(".tab-content.is-active").classList.remove("is-active");
+
+          e.target.parentElement.classList.add("is-active");
+          document.getElementById(e.target.dataset.tab).classList.add("is-active");
+        });
+      }
+
+      const fields = document.querySelectorAll(".field input.create");
+      for (let i = 0; i < fields.length; i++) {
+        fields[i].addEventListener("focus", function () {
+          let elem = fields[i].parentNode.parentNode.cloneNode(true);
+
+          if (elem.querySelectorAll("input.create")[0])
+            elem.querySelectorAll("input.create")[0].classList.remove("create")
+
+          if (elem.querySelectorAll("input.create")[1])
+            elem.querySelectorAll("input.create")[1].classList.remove("create")
+
+          if (elem.querySelector("span.icon"))
+            elem.querySelector("span.icon").classList.remove("is-hidden")
+
+          elem.querySelector("span.icon").addEventListener("click", function () {
+            this.parentNode.remove()
+          })
+
+          fields[i].parentNode.parentNode.parentNode.insertBefore(elem, fields[i].parentNode.parentNode)
+          elem.querySelectorAll("input")[0].focus();
+        });
+      }
+
+      // SDK
+      const options = {
+        workspace: env.WORKSPACE,
+        app_token: env.APP_TOKEN,
+        app_key: env.APP_KEY,
+        app_secret: env.APP_SECRET
+      }
+
+      console.log(InfinitumSDK)
+      InfinitumSDK.init(options).then(() => {
+        logSuccess(document.querySelector("#main .init .log"), 'InfinitumSDK initiated successfully!')
+
+        InfinitumSDK.rtm.on('connect', () => {
+          console.log('connect')
+        })
+
+        InfinitumSDK.rtm.on('disconnect', () => {
+          console.log('disconnect')
+        })
+      }).catch(error => {
+        logError(document.querySelector("#main .init .log"), error)
+      })
+    }
+
+    // LOGS
+    logSuccess = (elem, message) => {
+      elem.innerHTML = message
+    }
+
+    logError = (elem, error) => {
+      elem.innerHTML = error.status + ": " + error.name + ": " + error
+        .code +
+        ": " + error
+        .message
+    }
+
+    // AUTH
+    biometric = () => {
+      InfinitumSDK.camera.takePhoto().then(response => {
+        document.querySelector("#auth .photo .response").innerHTML += "<img style='height:100px' src='" +
+          response + "' />";
+
+        const data = {
+          photo: response
+        }
+
+        InfinitumSDK.auth.biometric(data).then(response => {
+          logSuccess(document.querySelector("#auth .photo .log"), response)
+        }).catch(error => {
+          logError(document.querySelector("#auth .photo .log"), error)
+        })
+      }).catch(error => {
+        logError(document.querySelector("#auth .photo .log"), error)
+      })
+    }
+
+    // CAMERA
+    takePhoto = () => {
+      InfinitumSDK.camera.takePhoto().then(response => {
+        document.querySelector("#camera .photo .response").innerHTML += "<img style='height:100px' src='" +
+          response + "' />";
+      }).catch(error => {
+        logError(document.querySelector("#camera .photo .log"), error)
+      })
+    }
+
+    takeDocument = () => {
+      InfinitumSDK.camera.start({
+        'container': document.getElementById('document-container'),
+        'frame': true
+      }).then(response => {
+        console.log(response)
+        /*InfinitumSDK.camera.takeDocument().then(response => {
+          console.log(response)
+        }).catch(error => {
+          logError(document.querySelector("#camera .document .log"), error)
+        })*/
+      }).catch(error => {
+        logError(document.querySelector("#camera .document .log"), error)
+      })
+    }
+
+    // LIVENESS
+    liveness = () => {
+      InfinitumSDK.liveness.start('H4oRSuhJjaQNSGT42RiE3YJWzEcgUd7v', 'liveness-container', {
+        loadedHandler: function () {
+          console.log('loadedHandler')
+        },
+        livenessPassedHandler: (response) => {
+          console.log('livenessPassedHandler', response)
+        },
+        livenessErrorHandler: (response) => {
+          console.log('livenessErrorHandler', response)
+        }
+      })
+    }
+
+    // DEVICE
+    deviceCreate = () => {
+      document.querySelector("#device .create .log").innerHTML = ''
+
+      let options = {};
+
+      let elems = document.querySelectorAll("#device .create input");
+      for (let i = 0; i < (elems.length - 1); i++) {
+        let key = elems[i].value;
+        if (key != "") {
+          i++;
+          let value = elems[i].value;
+          if (value != "") {
+            options[key] = value;
+          }
+        }
+      }
+
+      InfinitumSDK.device.create(options).then(response => {
+        logSuccess(document.querySelector("#device .create .log"), response)
+      }).catch(error => {
+        logError(document.querySelector("#device .create .log"), error)
+      })
+    }
+
+    
+    // ANALYTICS
+    analyticsCreate = () => {
+      document.querySelector("#analytics .create .log").innerHTML = ''
+
+      let options = {};
+
+      let elems = document.querySelectorAll("#analytics .create input");
+      for (let i = 0; i < (elems.length - 1); i++) {
+        let key = elems[i].value;
+        if (key != "") {
+          i++;
+          let value = elems[i].value;
+          if (value != "") {
+            options[key] = value;
+          }
+        }
+      }
+
+      InfinitumSDK.analytics.auth.create(options).then(response => {
+        logSuccess(document.querySelector("#analytics .create .log"), JSON.stringify(response))
+      }).catch(error => {
+        console.log(error);
+        logError(document.querySelector("#analytics .create .log"), error)
+      })
+    }
+
+    analyticsShow = () => {
+      document.querySelector("#analytics .show .log").innerHTML = ''
+
+      let options = {};
+
+      let elem = document.querySelector("#analytics .show input");
+      let key = 1;
+      if(elem.value !== "" || elem.value != undefined) key = elem.value;
+
+      InfinitumSDK.analytics.auth.get(key).then(response => {
+        logSuccess(document.querySelector("#analytics .show .log"), JSON.stringify(response))
+      }).catch(error => {
+        console.log(error);
+        logError(document.querySelector("#analytics .show .log"), error)
+      })
+    }
+
+    analyticsAll = () => {
+      document.querySelector("#analytics .all .log").innerHTML = ''
+
+      let options = {};
+
+      InfinitumSDK.analytics.auth.all(options).then(response => {
+            console.log(response["next_page_url"]);
+            if(response["next_page_url"]){
+              let url = response["next_page_url"].split('/api');
+              if(url[1]){
+                InfinitumSDK.analytics.auth.nextPage(url[1]).then(response => {
+                  document.getElementById("pageurl").innerHTML = url[1]
+                  logSuccess(document.querySelector("#analytics .nextpage .log"), JSON.stringify(response))
+                }).catch(error => {
+                  console.log(error);
+                  logError(document.querySelector("#analytics .nextpage .log"), error)
+                });
+              }
+            }
+        logSuccess(document.querySelector("#analytics .all .log"), JSON.stringify(response))
+      }).catch(error => {
+        console.log(error);
+        logError(document.querySelector("#analytics .all .log"), error)
+      })
+    }
+
+    // USER
+    userCreate = () => {
+      document.querySelector("#user .create .log").innerHTML = ''
+
+      let options = {};
+
+      let elems = document.querySelectorAll("#user .create input");
+      for (let i = 0; i < (elems.length - 1); i++) {
+        let key = elems[i].value;
+        if (key != "") {
+          i++;
+          let value = elems[i].value;
+          if (value != "") {
+            options[key] = value;
+          }
+        }
+      }
+
+      InfinitumSDK.user.create(options).then(response => {
+        logSuccess(document.querySelector("#user .create .log"), response)
+      }).catch(error => {
+        logError(document.querySelector("#user .create .log"), error)
+      })
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // OUTROS (EM DEV)
+    /////////////////////////////////////////////
+    /////////////////////////////////////////////
+    /////////////////////////////////////////////
+    events = () => {
+      const callbacks = {
+        onConnect: () => {
+          console.log('onConnect')
+        }
+      }
+
+      InfinitumSDK.events(callbacks)
+
+      setTimeout(() => {
+        InfinitumSDK.disconnect();
+      }, 2500);
+    }
+
+    auth = (photo) => {
+      const data = {
+        photo: photo,
+        position: {
+          lat: "41.173",
+          lng: "-8.645"
+        }
+      }
+
+      InfinitumSDK.auth.biometrid(data).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error.message)
+      })
+    }
+
+    qrcode = () => {
+      InfinitumSDK.qrcode.generate('workstation-locker').then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+
+    app = () => {
+      InfinitumSDK.app.url('workstation-locker').then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+
+    camera = () => {
+      InfinitumSDK.camera.devices().then(response => {
+        console.log(response)
+      })
+
+      InfinitumSDK.camera.takePhoto().then(response => {
+        auth(response)
+      }).catch(error => {
+        console.log(error)
+      })
+
+      /*InfinitumSDK.camera.start("front").then(response => {
+          console.log(response)
+          InfinitumSDK.camera.takePhoto().then(response => {
+              console.log(response)
+              InfinitumSDK.camera.stop()
+          }).catch(error => {
+              console.log(error)
+          })
+      }).catch(error => {
+          console.log(error)
+      })*/
+    }
+
+    esigning = () => {
+      InfinitumSDK.esigning.initFlow()
+        .then(response => {
+          console.log(response)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+      const callbacks = {}
+      InfinitumSDK.esigning.initProcess('5bffb50808cf940520175455', callbacks)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  </script>
+</body>
+
+</html>
