@@ -1,6 +1,6 @@
 {
   "name": "@infinitum/web-sdk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Infinitum Web SDK",
   "main": "dist/infinitum-sdk.js",
   "repository": {
